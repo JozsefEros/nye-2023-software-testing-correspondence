@@ -62,6 +62,7 @@ public class StepDefinitions {
 
     @When("I type {string} into the search field")
     public void iTypeInputIntoTheSearchField(String text) throws InterruptedException {
+        Thread.sleep(1000);
         communitiesPage.searchFor(text);
     }
 
