@@ -30,7 +30,6 @@ public class CommunitiesPage {
     }
 
     public List<WebElement> getEventCards() {
-        System.out.println(eventCards);
         return eventCards;
     }
 }
