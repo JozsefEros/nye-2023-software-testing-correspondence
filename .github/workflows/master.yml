@@ -14,4 +14,4 @@ jobs:
           distribution: 'adopt'
           cache: 'maven'
       - name: Run tests
-        run: mvn verify
+        run: mvn verify -Dheadless=true
