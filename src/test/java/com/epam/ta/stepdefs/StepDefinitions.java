@@ -3,6 +3,7 @@ package com.epam.ta.stepdefs;
 import com.epam.ta.helper.WebDriverFactory;
 import com.epam.ta.pageobjects.CommunitiesPage;
 import com.epam.ta.pageobjects.MainPage;
+import com.epam.ta.pageobjects.VideosPage;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -29,11 +30,16 @@ public class StepDefinitions {
     @Autowired
     CommunitiesPage communitiesPage;
 
+    @Autowired
+    VideosPage videosPage;
+
     @Given("the {string} page is opened")
     public void visitMainPage(String pageName) {
         switch (pageName) {
             case "Main" -> webDriverFactory.getDriver().get("https://wearecommunity.io");
             case "Communities" -> webDriverFactory.getDriver().get("https://wearecommunity.io/communities");
+            case "Videos" -> webDriverFactory.getDriver().get("https://wearecommunity.io/videos");
+
             default -> throw new RuntimeException(pageName + "is not a defined page");
         }
     }
@@ -66,6 +72,8 @@ public class StepDefinitions {
         communitiesPage.searchFor(text);
     }
 
+
+
     @Then("I see {int} cards")
     public void iSeeNumberOfCardsCards(int expectedCardCount) {
         var driver = webDriverFactory.getDriver();
@@ -81,6 +89,32 @@ public class StepDefinitions {
         } catch (TimeoutException e) {
             Assert.fail("Expected card count " + expectedCardCount + "did not match actual card count " +
                 communitiesPage.getEventCards().size());
+        }
+    }
+    // Videos page
+    @When("I type {string} into the videosearch field")
+    public void iTypeInputIntoTheVideosSearchField(String text) throws InterruptedException {
+        Thread.sleep(1000);
+        videosPage.searchFor(text);
+    }
+    @Then("I see {int} videocards")
+    public void iSeeNumberOfVideosCards(int expectedCardCount) {
+        var driver = webDriverFactory.getDriver();
+        System.out.println("Előtte: " + videosPage.getEventCards().size());
+        FluentWait<WebDriver> wait = new FluentWait<>(driver)
+                .withTimeout(Duration.ofSeconds(20))
+                .pollingEvery(Duration.ofSeconds(1))
+                .ignoring(NoSuchElementException.class);
+
+        try {
+            wait.until(
+                    usedDriver -> videosPage.getEventCards().size() == expectedCardCount
+                    );
+            System.out.println("Try ágban: " + videosPage.getEventCards().size());
+        } catch (TimeoutException e) {
+            Assert.fail("Expected card count " + expectedCardCount + " did not match actual card count " +
+                    videosPage.getEventCards().size());
+            System.out.println("Catch ágban: " + videosPage.getEventCards().size());
         }
     }
 }
